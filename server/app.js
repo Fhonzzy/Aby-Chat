@@ -4,8 +4,9 @@ const app = express();
 const cors = require("cors");
 const port = process.env.PORT || 8000;
 const connectDB = require("./db/connect");
-const authRoute = require("./Routes/Auth");
-const messageRoute = require("./Routes/Message");
+const authRoute = require("./Routes/auth");
+const messageRoute = require("./Routes/message");
+const userRoute = require("./Routes/user");
 const cookieParser = require('cookie-parser');
 
 
@@ -17,6 +18,7 @@ app.use(cookieParser());
 //Routes
 app.use("/api/v1/auth", authRoute);
 app.use("/api/v1/message", messageRoute);
+app.use("/api/v1/user", userRoute);
 
 const spinServer = async () => {
 	try {

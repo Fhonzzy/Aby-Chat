@@ -29,7 +29,7 @@ const sendMessage = async (req, res) => {
 		//Push message it to the conversation
 		conversation.messages.push(newMessage._id);
 
-        // Saves conversation & message
+		// Saves conversation & message
 		await conversation.save();
 		await newMessage.save();
 
@@ -40,4 +40,24 @@ const sendMessage = async (req, res) => {
 	}
 };
 
-module.exports = { sendMessage };
+const getMessage = async (req, res) => {
+	try {
+		const { id: userToChat } = req.params;
+		const senderId = req.user._id;
+
+		const conversation = await Conversation.findOne({
+			parties: { $all: [senderId, userToChat] },
+		}).populate("messages");
+
+		if (!conversation) {
+			return res.status(200).json([]);
+		}
+
+		res.status(200).json(conversation.messages);
+	} catch (error) {
+		console.error(error.message);
+		res.status(500).json({ msg: error.message });
+	}
+};
+
+module.exports = { sendMessage, getMessage };
